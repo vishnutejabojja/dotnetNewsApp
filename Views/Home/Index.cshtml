@@ -9,12 +9,21 @@
 <div class="row">
     @foreach (var article in Model)
     {
-        <div class="col-md-4">
+        <div class="">
             <div class="card mb-4">
-                <div class="card-body" style="background-image: url('https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg'); background-size:cover">
+                <div class="card-body d-flex">
+                    <div class="bd-highlight">
                     <h5 class="card-title">@article.Title</h5>
-                    <p class="card-text">@article.Summary</p>
-                    <a href="@article.Link" class="btn btn-primary">Read More</a>
+                    <h6 class="card-title" style="color: #c31040">@article.SubHeading</h6>
+                    <p class="card-text" style="color: white;">@article.Summary</p>
+                    <a href="@article.Link" class="text-decoration-none p-2 text-black" style="a:hover,a:focus {font-size: 120%}">Read More ></a>
+                    </div>
+                    <div class="items-end">
+                         @if (!string.IsNullOrEmpty(article.Img))
+                                {
+                                    <img src="@article.Img" class="w-25" style="align-items: end;" alt="@article.Img" />
+                                }
+                    </div>
                 </div>
             </div>
         </div>

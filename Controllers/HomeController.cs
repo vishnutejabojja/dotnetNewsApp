@@ -18,5 +18,10 @@ namespace AirplaneNewsScraper.Controllers
             var newsArticles = await _newsScraperService.GetAirplaneNewsAsync();
             return View(newsArticles);
         }
+
+        public async Task<IActionResult> Privacy()
+        {
+            return View(null);
+        }
     }
 }

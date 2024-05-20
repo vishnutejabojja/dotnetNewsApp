@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Web;
+using System.Runtime.InteropServices;
 
 namespace AirplaneNewsScraper.Services
 {
@@ -48,9 +50,11 @@ namespace AirplaneNewsScraper.Services
             {
                 var titleNode = article.SelectSingleNode(".//div/div[@class='Row_heading-container__N22Y6']/a[@class='Row_link__0_lcz']");
                 var summaryNode = article.SelectSingleNode(".//div/div[@class='Row_heading-container__N22Y6']/div[@class='Row_subheading__Lr7aG']");
-                var linkNode = article.SelectSingleNode(".//div/div[@class='Row_heading-container__N22Y6']/a[@class='Row_link__0_lcz']");
+                var linkNode = article.SelectSingleNode(".//div/div[@class='Row_heading-container__N22Y6']/a");
+                var imgNode = article.SelectSingleNode(".//div/div[@class='Row_media__29Sjt']/img");
+                var subHeadingNode = article.SelectSingleNode(".//div/div[@class='Row_heading-container__N22Y6']/div[@class='Row_label__OW2g4 ']");
 
-                if (titleNode == null || summaryNode == null || linkNode == null)
+                if (titleNode == null || summaryNode == null || linkNode == null || imgNode == null)
                 {
                     _logger.LogWarning("Incomplete article information found at {Url}", url);
                     continue;
@@ -58,14 +62,17 @@ namespace AirplaneNewsScraper.Services
 
                 var existingHref = linkNode.GetAttributeValue("href", string.Empty);
                 var newHref = "https://www.ainonline.com" + existingHref; // Modify this as needed
+                var imageUrl = imgNode.GetAttributeValue("srcset", string.Empty);
 
                 linkNode.SetAttributeValue("href", newHref);
 
                 var newsArticle = new NewsArticle
                 {
-                    Title = titleNode.InnerText.Trim(),
-                    Summary = summaryNode.InnerText.Trim(),
-                    Link = linkNode.GetAttributeValue("href", string.Empty)
+                    Title = HttpUtility.HtmlDecode(titleNode.InnerText.Trim()),
+                    Summary = HttpUtility.HtmlDecode(summaryNode.InnerText.Trim()),
+                    Link = HttpUtility.HtmlDecode(linkNode.GetAttributeValue("href", string.Empty)),
+                    Img = imageUrl,
+                    SubHeading = HttpUtility.HtmlDecode(subHeadingNode.InnerHtml.Trim())
                 };
 
                 newsArticles.Add(newsArticle);
@@ -78,7 +85,9 @@ namespace AirplaneNewsScraper.Services
     public class NewsArticle
     {
         public string Title { get; set; }
+        public string SubHeading { get; set; }
         public string Summary { get; set; }
         public string Link { get; set; }
+        public string Img { get; set; }
     }
 }
