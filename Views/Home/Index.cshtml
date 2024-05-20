@@ -1,0 +1,21 @@
+﻿@model List<AirplaneNewsScraper.Services.NewsArticle>
+
+@{
+    ViewData["Title"] = "Aircraft News";
+}
+
+<h1>Aircraft News</h1>
+
+<div class="row">
+    @foreach (var article in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body" style="background-image: url('https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg'); background-size:cover">
+                    <h5 class="card-title">@article.Title</h5>
+                    <p class="card-text">@article.Summary</p>
+                    <a href="@article.Link" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+    }
