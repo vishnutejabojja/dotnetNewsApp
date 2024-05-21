@@ -35,6 +35,6 @@ app.MapControllerRoute(
 // Get the PORT environment variable provided by Railway, default to 5000 if not set
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 // Configure the application to listen on 0.0.0.0 and the specified port
-app.Urls.Add($"http://127.0.0.1:{port}");
+app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.Run();
